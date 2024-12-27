@@ -26,18 +26,38 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+
+      - name: Set up GCP credentials
+        run: echo "${{ secrets.GCP_SERVICE_ACCOUNT }}" > ./KeySA.json
+
+      - name: Set up profiles.yml
+        run: |
+          mkdir -p ~/.dbt
+          echo "TestAnalytics:
+          outputs:
+            dev:
+              dataset: DS_Test
+              job_execution_timeout_seconds: 150
+              job_retries: 1
+              keyfile: ./KeySA.json
+              location: us-central1
+              method: service-account
+              priority: interactive
+              project: test-analytics-engineering
+              threads: 1
+              type: bigquery
+          target: dev" > ~/.dbt/profiles.yml
+
+      - name: Step into Project folder
+        run: cd TestAnalytics
       
       - name: Validate dbt Project
         run: dbt debug
 
       - name: Run Unit Tests
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_SERVICE_ACCOUNT }}
         run: |
           dbt deps
           dbt test
 
       - name: Deploy to BigQuery
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_SERVICE_ACCOUNT }}
         run: dbt run
