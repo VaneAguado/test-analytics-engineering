@@ -1,10 +1,8 @@
 name: DBT Pipeline
-
-on:
+'on':
   push:
     branches:
       - main
-
 jobs:
   validate-code:
     name: Validate dbt Code
@@ -12,23 +10,19 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-        
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: 3.12
-
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
-     - name: Set up GCP credentials
+      - name: Set up GCP credentials
         env:
-          GCP_KEY: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+          GCP_KEY: '${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}'
         run: |
           echo "$GCP_KEY" | base64 -d > ./TestAnalytics/KeySA.json
-
       - name: Set up profiles.yml
         run: |
           echo "TestAnalytics:
@@ -45,17 +39,18 @@ jobs:
                 threads: 1
                 type: bigquery
             target: dev" > ./TestAnalytics/profiles.yml
-
       - name: Print profiles.yml
         run: cat ./TestAnalytics/profiles.yml
-      
       - name: Validate dbt Project
-        run: dbt debug --project-dir ./TestAnalytics/ --profiles-dir ./TestAnalytics/
-
+        run: >-
+          dbt debug --project-dir ./TestAnalytics/ --profiles-dir
+          ./TestAnalytics/
       - name: Run Unit Tests
-        run: |
-          dbt deps --project-dir ./TestAnalytics/ --profiles-dir ./TestAnalytics/
-          dbt test --project-dir ./TestAnalytics/ --profiles-dir ./TestAnalytics/
+        run: >
+          dbt deps --project-dir ./TestAnalytics/ --profiles-dir
+          ./TestAnalytics/
 
+          dbt test --project-dir ./TestAnalytics/ --profiles-dir
+          ./TestAnalytics/
       - name: Deploy to BigQuery
         run: dbt run --project-dir ./TestAnalytics/ --profiles-dir ./TestAnalytics/
