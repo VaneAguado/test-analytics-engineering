@@ -28,7 +28,7 @@ jobs:
 
       - name: Set up profiles.yml
         run: |
-          echo "default:
+          echo "TestAnalytics:
             outputs:
               dev:
                 dataset: DS_Test
