@@ -47,6 +47,9 @@ jobs:
                 threads: 1
                 type: bigquery
             target: dev" > ~/.profiles/profiles.yml
+
+      - name: Print profiles.yml
+        run: cat ~/.profiles/profiles.yml
       
       - name: Validate dbt Project
         run: dbt debug --project-dir ./TestAnalytics/
