@@ -23,8 +23,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Set up GCP credentials
-        run: echo "${{ secrets.GCP_SERVICE_ACCOUNT }}" > ./TestAnalytics/KeySA.json
+     - name: Set up GCP credentials
+        env:
+          GCP_KEY: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+        run: |
+          echo "$GCP_KEY" | base64 -d > ./TestAnalytics/KeySA.json
 
       - name: Set up profiles.yml
         run: |
