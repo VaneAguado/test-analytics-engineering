@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  DBT_PROFILES_DIR: ./profiles
+  DBT_PROFILES_DIR:  ~/.profiles
   DBT_TARGET: dev
 
 jobs:
