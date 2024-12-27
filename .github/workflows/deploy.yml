@@ -44,7 +44,7 @@ jobs:
       - name: Validate dbt Project
         run: >-
           dbt debug --project-dir ./TestAnalytics/ --profiles-dir
-          ./TestAnalytics/
+          ./TestAnalytics/ --debug
       - name: Run Unit Tests
         run: >
           dbt deps --project-dir ./TestAnalytics/ --profiles-dir
