@@ -1,0 +1,42 @@
+version: 2
+
+models:
+  - name: staging_bank_marketing
+    columns:
+      - name: age_group
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['young', 'adult', 'senior']
+      - name: age
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 18
+              max_value: 100
+              inclusive: true
+
+      - name: job
+        tests:
+          - not_null
+          - dbt_utils.not_empty_string:
+              trim_whitespace: false
+      - name: marital
+        tests:
+          - not_null
+          - dbt_utils.not_empty_string:
+              trim_whitespace: false
+      - name: education
+        tests:
+          - not_null
+          - dbt_utils.not_empty_string:
+              trim_whitespace: false
+      - name: conversion
+        tests:
+          - not_null
+      - name: previous_success
+        tests:
+          - not_null
+      - name: campaign
+        tests:
+          - not_null

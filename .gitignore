@@ -1,0 +1,6 @@
+TestAnalytics/target/
+TestAnalytics/dbt_packages/
+TestAnalytics/logs/
+TestAnalytics/KeySA.json
+logs/
+Test/
