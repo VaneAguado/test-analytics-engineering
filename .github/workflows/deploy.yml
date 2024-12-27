@@ -31,7 +31,7 @@ jobs:
                 dataset: DS_Test
                 job_execution_timeout_seconds: 150
                 job_retries: 1
-                keyfile: ./KeySA.json
+                keyfile: ./TestAnalytics/KeySA.json
                 location: us-central1
                 method: service-account
                 priority: interactive
