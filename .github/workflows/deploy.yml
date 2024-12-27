@@ -33,7 +33,7 @@ jobs:
       - name: Set up profiles.yml
         run: |
           mkdir -p ~/.profiles
-          echo "TestAnalytics:
+          echo "default:
             outputs:
               dev:
                 dataset: DS_Test
