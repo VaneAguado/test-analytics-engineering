@@ -32,7 +32,7 @@ jobs:
 
       - name: Set up profiles.yml
         run: |
-          mkdir -p ~/.dbt
+          mkdir -p ~/.profiles
           echo "TestAnalytics:
           outputs:
             dev:
@@ -46,18 +46,15 @@ jobs:
               project: test-analytics-engineering
               threads: 1
               type: bigquery
-          target: dev" > ~/.dbt/profiles.yml
-
-      - name: Step into Project folder
-        run: cd TestAnalytics
+          target: dev" > ~/.profiles/profiles.yml
       
       - name: Validate dbt Project
-        run: dbt debug
+        run: dbt debug --project-dir ./TestAnalytics/
 
       - name: Run Unit Tests
         run: |
-          dbt deps
-          dbt test
+          dbt deps --project-dir ./TestAnalytics/
+          dbt test --project-dir ./TestAnalytics/
 
       - name: Deploy to BigQuery
-        run: dbt run
+        run: dbt run --project-dir ./TestAnalytics/
