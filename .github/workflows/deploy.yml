@@ -5,10 +5,6 @@ on:
     branches:
       - main
 
-env:
-  DBT_PROFILES_DIR:  ~/.profiles
-  DBT_TARGET: dev
-
 jobs:
   validate-code:
     name: Validate dbt Code
@@ -32,7 +28,6 @@ jobs:
 
       - name: Set up profiles.yml
         run: |
-          mkdir -p ~/.profiles
           echo "default:
             outputs:
               dev:
@@ -46,18 +41,18 @@ jobs:
                 project: test-analytics-engineering
                 threads: 1
                 type: bigquery
-            target: dev" > ~/.profiles/profiles.yml
+            target: dev" > ./TestAnalytics/profiles.yml
 
       - name: Print profiles.yml
-        run: cat ~/.profiles/profiles.yml
+        run: cat ./TestAnalytics/profiles.yml
       
       - name: Validate dbt Project
-        run: dbt debug --project-dir ./TestAnalytics/
+        run: dbt debug --project-dir ./TestAnalytics/ --profiles-dir ./TestAnalytics/
 
       - name: Run Unit Tests
         run: |
-          dbt deps --project-dir ./TestAnalytics/
-          dbt test --project-dir ./TestAnalytics/
+          dbt deps --project-dir ./TestAnalytics/ --profiles-dir ./TestAnalytics/
+          dbt test --project-dir ./TestAnalytics/ --profiles-dir ./TestAnalytics/
 
       - name: Deploy to BigQuery
-        run: dbt run --project-dir ./TestAnalytics/
+        run: dbt run --project-dir ./TestAnalytics/ --profiles-dir ./TestAnalytics/
