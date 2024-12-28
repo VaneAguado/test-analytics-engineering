@@ -1,0 +1,46 @@
+version: 2
+
+sources:
+  - name: DS_Test
+    schema: DS_Test
+    database: test-analytics-engineering
+    description: "Dataset principal para análisis"
+
+    tables:
+      - name: raw_bank_marketing
+        description: "The data is related with direct marketing campaigns of a Portuguese banking institution"
+        columns:
+          - name: age
+            description: "Client age "
+          - name: job
+            description: "type of job (categorical: 'admin.','blue-collar','entrepreneur','housemaid','management','retired','self-employed','services','student','technician','unemployed','unknown')"
+          - name: marital
+            description: "marital status (categorical: 'divorced','married','single','unknown'; note: 'divorced' means divorced or widowed)"
+          - name: education
+            description: "(categorical: 'basic.4y','basic.6y','basic.9y','high.school','illiterate','professional.course','university.degree','unknown')	"
+          - name: default
+            description: "has credit in default?"
+          - name: balance
+            description: "average yearly balance"
+          - name: housing
+            description: "has housing loan?"
+          - name: loan
+            description: "has personal loan?"
+          - name: contact
+            description: "contact communication type (categorical: 'cellular','telephone')"
+          - name: day_of_week
+            description: "last contact day of the week"
+          - name: month
+            description: "last contact month of year (categorical: 'jan', 'feb', 'mar', ..., 'nov', 'dec')"
+          - name: duration
+            description: "last contact duration, in seconds (numeric). Important note: this attribute highly affects the output target (e.g., if duration=0 then y='no'). Yet, the duration is not known before a call is performed. Also, after the end of the call y is obviously known. Thus, this input should only be included for benchmark purposes and should be discarded if the intention is to have a realistic predictive model."
+          - name: campaign
+            description: "number of contacts performed during this campaign and for this client (numeric, includes last contact)"
+          - name: pdays
+            description: "number of days that passed by after the client was last contacted from a previous campaign (numeric; -1 means client was not previously contacted)"
+          - name: previous
+            description: "number of contacts performed before this campaign and for this client"
+          - name: poutcome
+            description: "outcome of the previous marketing campaign (categorical: 'failure','nonexistent','success')"
+          - name: 'y'
+            description: "has the client subscribed a term deposit?"

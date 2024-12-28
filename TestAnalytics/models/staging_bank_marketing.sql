@@ -7,7 +7,7 @@ WITH base_data AS (
         LOWER(TRIM(month)) AS month_normalized,
         LOWER(TRIM(poutcome)) AS poutcome_normalized
     FROM
-        `test-analytics-engineering.DS_Test.raw_bank_marketing`
+        {{ source('DS_Test', 'raw_bank_marketing') }}
 ),
 
 filtered_data AS (

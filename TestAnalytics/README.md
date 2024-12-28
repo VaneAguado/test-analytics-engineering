@@ -1,15 +1,25 @@
-Welcome to your new dbt project!
+Este proyecto se basa en datos obtenidos de una campaña de marketing mediante llamadas telefónicas, realizada por una institución bancaria de Portugal. El objetivo principal de dicha campaña era lograr que los clientes se suscribieran a un depósito a plazo.
 
-### Using the starter project
+En este proyecto de dbt se busca construir un Data Mart que permita al equipo de marketing analizar la efectividad de sus campañas, centrándose en KPIs como la tasa de conversión, el número de contactos exitosos y la segmentación de clientes.
 
-Try running the following commands:
-- dbt run
-- dbt test
+Para comenzar, se creó un entorno virtual de python version 3.12 y su respectivo archivo de requirements.txt, con el fin de aislar las dependencias entre proyectos, asegurar la replicabilidad de las versiones de las librerías y facilitar la actualización y el mantenimiento de dichos paquetes. En este entorno se emplearon dbt-core y dbt-bigquery, que proporcionan las herramientas necesarias para alcanzar los objetivos propuestos.
 
+Los datos que se utilizarán provienen de la nube de GCP, alojados en el servicio de BigQuery. Se empleó el conjunto de datos bank-full.csv con la intención de disponer de información suficiente para tomar muestras y validar teorías que aporten valor al negocio. Luego de subir los datos, se configuró una service account con roles de BigQuery Data Owner y BigQuery Job User, los cuales permiten ejecutar exitosamente los modelos de dbt. A esta service account se le generó una clave en formato JSON para habilitar la conexión al proyecto y llevar a cabo el estudio descrito.
 
-### Resources:
-- Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
-- Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
-- Join the [chat](https://community.getdbt.com/) on Slack for live discussions and support
-- Find [dbt events](https://events.getdbt.com) near you
-- Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices.
+En la creación del proyecto de dbt, se configuró el profile.yml, donde se definieron el método de conexión, el proyecto de GCP, el dataset de bigquery a utilizar y otros valores relevantes.
+
+Con el proyecto inicializado, se procedió a la creación de los modelos. Primero, se configuró BigQuery como la fuente de datos y una vez establecida, se analizó la información provista por Machine Learning Repository, la fuente original de los datos, donde se detalla cada columna, su tipo de dato y su descripción. A partir de esta referencia, se pudo filtrar y conservar únicamente los campos necesarios para este ejercicio. Además, a cada modelo principal se le asignó un archivo de documentación para brindar claridad sobre su funcionalidad.
+
+En el primer modelo, que normaliza los datos, se conservaron columnas como age, job, marital, education y campaign debido a que pueden representar tendencias importantes para llevar a cabo un proceso de segmentacion de acuerdo a la naturaleza de este problema. También se crearon columnas derivadas como age_group, previous_success y contact_month_numeric. La columna original que contenía las iniciales del mes se transformó a un valor numérico para evitar errores ortográficos y facilitar las consultas. Asimismo, el valor “y” se renombró para aportar mayor contexto. Al finalizar estas transformaciones, se ejecutó el modelo, generando una nueva vista en el dataset configurado al inicio.
+
+El segundo modelo, kpi_bank_marketing, parte de la vista obtenida anteriormente y fue concebido para responder preguntas sobre la tasa de conversión, el número de contactos exitosos y la segmentación de clientes. En este modelo se realizaron agrupaciones por age_group, job, marital y education.
+
+Adicionalmente, se crearon dos modelos más, de menor alcance, que se enfocan en la segmentación por age_group y por month. Esto se definió como criterio personal para obtener una vision clara de la distribución poblacional y la tasa de éxito por sector. Asimismo, se analizó la aceptación mensual de la campaña, a fin de identificar puntos de mejora y priorizar esfuerzos en determinados meses.
+
+Posteriormente, se elaboró el archivo schema.yml, que incluye pruebas unitarias centradas principalmente en el primer modelo, con el propósito de examinar aspectos como valores nulos y cadenas vacías, además de verificar valores admitidos. Para ello, se utilizó el paquete dbt_utils, que contiene pruebas genéricas útiles para evaluar estos escenarios.
+
+Para el despliegue de los modelos, se empleó GitHub Actions. En la carpeta .github/workflows, se incluyó el archivo deploy.yml, que hace posible que GitHub detecte y ejecute el flujo cuando haya un commit en la rama main, la única rama del repositorio por motivos de simplicidad. El flujo de integración continua se ejecuta en una máquina virtual de Ubuntu, donde se configura el entorno de Python con las dependencias especificadas en el requirements.txt.
+
+Luego, se crea y decodifica la clave de la service account configurada en GCP. El valor de dicha clave se almacena como un secreto en GitHub en formato base64, siguiendo buenas prácticas de seguridad para evitar exponer credenciales. De igual forma, se genera de manera dinámica el archivo profile.yml, necesario para ejecutar el proyecto en ese entorno virtual. Entre las tareas definidas, se incluyen la validación del proyecto y las pruebas unitarias de dbt, para asegurar la calidad del proceso realizado. Una vez concluidos los tests, se despliegan los modelos en BigQuery, manteniendo así un proceso constante de actualización.
+
+Finalmente en la pestaña Action dentro del repositorio se pueden encontrar los logs generados al realizar cada commit, y contiene herramientas que permiten supervisar y ejecutar flujos tanto exitosos como fallidos. Es importante mencionar que en caso de errores en el flujo, se genera una notificacion por correo de forma automatica. 
